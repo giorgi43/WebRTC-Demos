@@ -17,7 +17,7 @@ connectBtn.addEventListener('click', function(e) {
 sendMsg.addEventListener('click', function(e) {
     sendMessage({
         type: 'offer',
-        name: 'gio',
+        name: otherName.value,
         offer: textField.value
     });
 });
