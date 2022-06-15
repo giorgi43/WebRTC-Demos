@@ -30,6 +30,22 @@ loginBtn.addEventListener('click', function(e) {
 
 connectBtn.addEventListener('click', function(e) {
     startRtc();
+
+    var peerName = otherName.value;
+
+    // make offer
+    pc.createOffer(function (offer) {
+        sendMessage({
+            type: 'offer',
+            to: peerName,
+            from: username.value,
+            offer: offer
+        });
+
+        pc.setLocalDescription(offer);
+    });
+
+
 });
 
 // // offer
@@ -61,13 +77,13 @@ signalingServer.onmessage = function(message) {
             onLogin(data.success);
             break;
         case 'offer':
-            onOffer()
+            onOffer(data.offer, data.from);
             break;
         case 'answer':
-            onAnswer();
+            onAnswer(data.answer);
             break;
         case 'candidate':
-            onCandidate();
+            onCandidate(data.candidate);
             break;
     }
 }
@@ -90,17 +106,40 @@ function onLogin(success) {
         alert("Login failed");
     }
 
+    console.log('login was successful');
     connectBtn.disabled = false;
     otherName.disabled = false;
     
 }
+
+function onOffer(offer, username) {
+    pc.setRemoteDescription(new RTCSessionDescription(offer));
+
+    pc.createAnswer(function(ans) {
+        sendMessage({
+            to: username,
+            type: 'answer',
+            answer: answer
+        })
+    }, function(error) {
+        alert('error');
+    });
+}
+
+function onAnswer(answer) { 
+    pc.setRemoteDescription(new RTCSessionDescription(answer)); 
+ } 
+  
+ function onCandidate(candidate) { 
+    pc.addIceCandidate(new RTCIceCandidate(candidate)); 
+ }	
 
 function startRtc() {
     var configuration = { 
         "iceServers": [{ "url": "stun:stun.1.google.com:19302" }] 
     }; 
 
-    console.log("Login was sucessful, starting WebRTC")
+    console.log("starting WebRTC")
 
     pc = new RTCPeerConnection(configuration);
 
