@@ -15,9 +15,6 @@ let loginBtn = document.querySelector('#loginBtn');
 let connectBtn = document.querySelector('#connectTo');
 let otherName = document.querySelector('#otherName');
 
-connectBtn.disabled = true;
-otherName.disabled = true;
-
 let pc;
 
 // login
@@ -29,7 +26,6 @@ loginBtn.addEventListener('click', function(e) {
 });
 
 connectBtn.addEventListener('click', function(e) {
-    startRtc();
 
     var peerName = otherName.value;
 
@@ -107,9 +103,20 @@ function onLogin(success) {
     }
 
     console.log('login was successful');
-    connectBtn.disabled = false;
-    otherName.disabled = false;
     
+    startRtc();
+    // when browser finds ice send it to peer
+    pc.onicecandidate = function (event) {
+        if (event.candidate) {
+            console.log("sending ice candidate");
+            sendMessage({
+                type: "candidate", 
+                candidate: event.candidate,
+                to: otherName.value
+            });
+
+        } 
+    }; 
 }
 
 function onOffer(offer, username) {
@@ -143,18 +150,6 @@ function startRtc() {
 
     pc = new RTCPeerConnection(configuration);
 
-    // when browser finds ice send it to peer
-    pc.onicecandidate = function (event) {
-        if (event.candidate) {
-            console.log("sending ice candidate");
-            sendMessage({
-                type: "candidate", 
-                candidate: event.candidate,
-                to: otherName.value
-            });
-
-        } 
-    }; 
 }
 
 function sendMessage(message) {
