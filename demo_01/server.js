@@ -60,6 +60,30 @@ wss.on('connection', function(conn) {
                 }
 
                 break;
+            
+            case 'candidate':
+                console.log('sending candidate to:', data.to);
+
+                var connection = users[data.to];
+
+                if (conn != null) {
+                    sendTo(connection, data);
+                }
+
+                break;
+            
+            case 'leave':
+                console.log('disconnecting from', data.to);
+
+                var connection = users[data.to];
+
+                if (connection != nul) {
+                    connection.name = null;
+                    sendTo(connection, {
+                        type: 'leave'
+                    });
+                }
+                break;
 
             default:
                 sendTo(conn, {
