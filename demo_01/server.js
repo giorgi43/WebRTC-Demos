@@ -7,8 +7,6 @@ var users = {};
 wss.on('connection', function(conn) {
     console.log("user connected");
 
-    conn.send("hello from server");
-
     conn.on('message', function(msg) {
         var data;
         // accept only JSON messaged
@@ -21,7 +19,7 @@ wss.on('connection', function(conn) {
 
         switch (data.type) {
             case 'login':
-                console.log("user connected with name: ", data.name);
+                console.log("user connected with name:", data.name);
 
                 // if already exists, refuse login
                 if (users[data.name]) {
@@ -40,6 +38,36 @@ wss.on('connection', function(conn) {
                     });
                 }
                 break;
+            case 'offer':
+                console.log('sending offer to:', data.name);
+                
+                var connection = users[data.name];
+
+                if (connection != null) {
+                    connection.otherName = data.name;
+
+                    sendTo(connection, {
+                        type: 'offer',
+                        offer: data.offer,
+                        name: connection.name
+                    })
+                }
+
+                break;
+            
+            case 'answer':
+                console.log('sending answer to:', data.name);
+
+                var connection = users[data.name];
+
+                if (connection != null) {
+                    connection.otherName = data.name;
+                    sendTo(connection, {
+                        type: 'answer',
+                        answer: data.answer
+                    })
+                }
+                break;
             default:
                 sendTo(conn, {
                     type: 'error',
@@ -52,7 +80,7 @@ wss.on('connection', function(conn) {
 
     conn.on('close', function() {
         if (conn.name) {
-            console.log("user closed connection: ", conn.name);
+            console.log("user closed connection:", conn.name);
             delete users[conn.name];
         }
     })
