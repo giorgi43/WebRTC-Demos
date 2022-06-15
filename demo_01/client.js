@@ -129,7 +129,7 @@ function onOffer(offer, username) {
         sendMessage({
             to: username,
             type: 'answer',
-            answer: answer
+            answer: ans
         })
     }, function(error) {
         alert('error');
