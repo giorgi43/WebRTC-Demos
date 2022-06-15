@@ -42,7 +42,7 @@ wss.on('connection', function(conn) {
                 var connection = users[data.to];
 
                 if (connection != null) {
-                    connection.otherName = data.from;
+                    // connection.otherName = data.from;
 
                     sendTo(connection, data); 
                 }
@@ -55,7 +55,7 @@ wss.on('connection', function(conn) {
                 var connection = users[data.to];
 
                 if (connection != null) {
-                    connection.otherName = data.from;
+                    // connection.otherName = data.from;
                     sendTo(connection, data);
                 }
 
