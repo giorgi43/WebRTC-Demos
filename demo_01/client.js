@@ -4,7 +4,7 @@ let username = document.querySelector('#username');
 let connectBtn = document.querySelector('#connectBtn');
 
 let offerOtherName = document.querySelector('#offerOtherName');
-let offerTextField = document.querySelector('#OfferTextField');
+let offerTextField = document.querySelector('#offerTextField');
 let sendOffer = document.querySelector('#sendOffer');
 
 let answerOtherName = document.querySelector('#answerOtherName');
