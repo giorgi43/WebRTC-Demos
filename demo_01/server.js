@@ -5,8 +5,6 @@ var wss = new WebSocketServer({port: 8080});
 var users = {};
 
 wss.on('connection', function(conn) {
-    console.log("user connected");
-
     conn.on('message', function(msg) {
         var data;
         // accept only JSON messaged
@@ -19,7 +17,7 @@ wss.on('connection', function(conn) {
 
         switch (data.type) {
             case 'login':
-                console.log("user connected with name:", data.name);
+                console.log("user wants to login with name:", data.name);
 
                 // if already exists, refuse login
                 if (users[data.name]) {
@@ -39,35 +37,30 @@ wss.on('connection', function(conn) {
                 }
                 break;
             case 'offer':
-                console.log('sending offer to:', data.name);
+                console.log('sending offer to:', data.to);
                 
-                var connection = users[data.name];
+                var connection = users[data.to];
 
                 if (connection != null) {
-                    connection.otherName = data.name;
+                    connection.otherName = data.from;
 
-                    sendTo(connection, {
-                        type: 'offer',
-                        offer: data.offer,
-                        name: connection.name
-                    })
+                    sendTo(connection, data); 
                 }
 
                 break;
             
             case 'answer':
-                console.log('sending answer to:', data.name);
+                console.log('sending answer to:', data.to);
 
-                var connection = users[data.name];
+                var connection = users[data.to];
 
                 if (connection != null) {
-                    connection.otherName = data.name;
-                    sendTo(connection, {
-                        type: 'answer',
-                        answer: data.answer
-                    })
+                    connection.otherName = data.from;
+                    sendTo(connection, data);
                 }
+
                 break;
+
             default:
                 sendTo(conn, {
                     type: 'error',

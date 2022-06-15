@@ -3,10 +3,16 @@ let signalingServer = new WebSocket('ws://192.168.1.16:8080');
 let username = document.querySelector('#username');
 let connectBtn = document.querySelector('#connectBtn');
 
-let otherName = document.querySelector('#otherName');
-let textField = document.querySelector('#textField');
-let sendMsg = document.querySelector('#sendMsg');
+let offerOtherName = document.querySelector('#offerOtherName');
+let offerTextField = document.querySelector('#OfferTextField');
+let sendOffer = document.querySelector('#sendOffer');
 
+let answerOtherName = document.querySelector('#answerOtherName');
+let answerTextField = document.querySelector('#answerTextField');
+let sendAnswer = document.querySelector('#sendAnswer');
+
+
+// login
 connectBtn.addEventListener('click', function(e) {
     sendMessage({
         type: 'login',
@@ -14,11 +20,23 @@ connectBtn.addEventListener('click', function(e) {
     });
 });
 
-sendMsg.addEventListener('click', function(e) {
+// offer
+sendOffer.addEventListener('click', function(e) {
     sendMessage({
         type: 'offer',
-        name: otherName.value,
-        offer: textField.value
+        to: offerOtherName.value,
+        from: username.value,
+        offer: offerTextField.value
+    });
+});
+
+// answer
+sendAnswer.addEventListener('click', function(e) {
+    sendMessage({
+        type: 'answer',
+        to: answerOtherName.value,
+        from: username.value,
+        offer: answerTextField.value
     });
 });
 
