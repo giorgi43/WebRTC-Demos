@@ -31,6 +31,7 @@ connectBtn.addEventListener('click', function(e) {
 
     // make offer
     pc.createOffer(function (offer) {
+        console.log('create offer: ', offer);
         sendMessage({
             type: 'offer',
             to: peerName,
@@ -39,6 +40,8 @@ connectBtn.addEventListener('click', function(e) {
         });
 
         pc.setLocalDescription(offer);
+    }, function (error) {
+        console.log("createOffer error:", error);
     });
 
 
