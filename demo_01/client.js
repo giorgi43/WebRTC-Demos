@@ -6,7 +6,12 @@ let loginBtn = document.querySelector('#loginBtn');
 let connectBtn = document.querySelector('#connectTo');
 let otherName = document.querySelector('#otherName');
 
+let localVideo = document.querySelector('#localVideo');
+let remoteVideo = document.querySelector('#remoteVideo');
+
 var pc;
+
+let localStream;
 
 // login
 loginBtn.addEventListener('click', function(e) {
@@ -18,11 +23,18 @@ loginBtn.addEventListener('click', function(e) {
 
 connectBtn.addEventListener('click', async function(e) {
 
+    const stream = await navigator.mediaDevices.getUserMedia({audio: false, video: true});
+    console.log("Received local stream");
+    localVideo.srcObject = stream;
+    localStream = stream;
+
+    localStream.getTracks().forEach(track => pc.addTrack(track, localStream));
+
     var peerName = otherName.value;
 
     // make offer
     const offer = await pc.createOffer({
-        'offerToReceiveAudio': true,
+        'offerToReceiveAudio': false,
         'offerToReceiveVideo': true   
     });
     await pc.setLocalDescription(offer);
@@ -128,6 +140,12 @@ function onLogin(success) {
               break;
         }
     };
+
+    pc.ontrack = function (event) {
+        if (remoteVideo.srcObject !== event.streams[0]) {
+            remoteVideo.srcObject = event.streams[0];
+        }
+    }
 }
 
 async function onOffer(offer, sender) {

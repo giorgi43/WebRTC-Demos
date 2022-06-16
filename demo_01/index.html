@@ -5,6 +5,20 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
+
+    <style>
+        #videosCont {
+            margin-top: 20px;
+            display: flex;
+            gap: 10px 10px;
+        }
+        
+        video {
+            background: #222;
+            width: 400px;
+            height: 400px;
+        }
+    </style>
 </head>
 <body>
 
@@ -16,6 +30,11 @@
     <br>
     <br>
     <button id="connectTo"> Connect </button>
+    
+    <div id="videosCont">
+        <video id="localVideo" playsinline autoplay mutes></video>
+        <video id="remoteVideo" playsinline autoplay></video>
+    </div>
 
     <script src = "client.js"></script>
 </body>
