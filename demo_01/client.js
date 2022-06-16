@@ -21,7 +21,10 @@ connectBtn.addEventListener('click', async function(e) {
     var peerName = otherName.value;
 
     // make offer
-    const offer = await pc.createOffer();
+    const offer = await pc.createOffer({
+        'offerToReceiveAudio': true,
+        'offerToReceiveVideo': true   
+    });
     await pc.setLocalDescription(offer);
 
     sendMessage({
